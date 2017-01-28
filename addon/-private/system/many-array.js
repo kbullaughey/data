@@ -152,7 +152,9 @@ export default Ember.Object.extend(Ember.MutableArray, Ember.Evented, {
       // been 'acknowleged' to be in the relationship via a store.push)
       (internalModel) => internalModel.isNew() && toSet.indexOf(internalModel) === -1
     );
-    toSet = toSet.concat(newRecords);
+    toSet = toSet.filter(function(r) {
+      return !r.isDeleted();
+    }).concat(newRecords);
     let oldLength = this.length;
     this.arrayContentWillChange(0, this.length, toSet.length);
     // It’s possible the parent side of the relationship may have been unloaded by this point
